@@ -26,7 +26,7 @@ const userCraftCollection = client.db("userCraftDB").collection("userCraft");
 app.post('/coffee', async(req, res) =>{
   // Create a document to insert
   const newCraft = req.body;
-  console.log(newCraft);
+  //console.log(newCraft);
   // Insert the defined document into the "userAddCraft" collection
   const result = await userCraftCollection.insertOne(newCraft);
   // send inserted data to database
