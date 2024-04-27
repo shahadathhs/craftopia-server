@@ -29,7 +29,14 @@ app.get('/userCraft', async(req, res) => {
   const cursor = userCraftCollection.find();
   const result = await cursor.toArray();
   res.send(result);
-});
+})
+
+app.get('/userCraft/:id', async(req, res) => {
+  const id = req.params.id;
+  const query = { _id: new ObjectId(id)}
+  const result = await userCraftCollection.findOne(query);
+  res.send(result)
+})
 
 app.post('/userCraft', async(req, res) =>{
   // Create a document to insert
