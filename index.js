@@ -23,7 +23,7 @@ const client = new MongoClient(uri, {
 // Get the database and collection on which to run the operation
 const userCraftCollection = client.db("userCraftDB").collection("userCraft");
 
-app.post('/coffee', async(req, res) =>{
+app.post('/userCraft', async(req, res) =>{
   // Create a document to insert
   const newCraft = req.body;
   //console.log(newCraft);
