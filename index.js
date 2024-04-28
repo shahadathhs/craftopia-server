@@ -48,17 +48,28 @@ app.post('/userCraft', async(req, res) =>{
   res.send(result);
 })
 
-// app.patch('/userCraft', async(req, res) => {
-//   const userCraft = req.body;
-//   const filter = { email: userCraft.email}
-//   const updatedCraft = {
-//     $set: {
-       
-//     }
-//   };
-//   const result = await userCraftCollection.updateOne(filter, updatedCraft);
-//   res.send(result);
-// })
+app.put('/userCraft/:id', async(req, res) => {
+  const id = req.params.id;
+  const filter = { _id: new ObjectId(id)}
+  const options = { upsert: true };
+  const craft = req.body;
+  const updatedCraft = {
+    $set: {
+      customization: craft.customization,
+      description: craft.description, 
+      itemName: craft.itemName,
+      photo: craft.photo,
+      prize: craft.prize,
+      processingTime: craft.processingTime,
+      rating: craft.rating,
+      stockStatus: craft.stockStatus,
+      subCategory: craft.subCategory
+    }
+  };
+  const result = await userCraftCollection.updateOne(filter, updatedCraft, options);
+  res.send(result);
+  console.log("craft updated", updatedCraft)
+})
 
 app.delete('/userCraft/:id', async(req, res) => {
   const id = req.params.id;
