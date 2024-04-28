@@ -22,7 +22,7 @@ const client = new MongoClient(uri, {
 
 // Get the database and collection on which to run the operation
 const userCraftCollection = client.db("userCraftDB").collection("userCraft");
-
+const manualCraftCollection = client.db("userCraftDB").collection("manualCraft");
 
 //userCraft related api
 app.get('/userCraft', async(req, res) => { 
@@ -76,6 +76,20 @@ app.delete('/userCraft/:id', async(req, res) => {
   const query = { _id: new ObjectId(id)}
   const result = await userCraftCollection.deleteOne(query);
   res.send(result);
+})
+
+//manualCraft related api
+app.get('/manualCraft', async(req, res) => { 
+  const cursor = manualCraftCollection.find();
+  const result = await cursor.toArray();
+  res.send(result);
+})
+
+app.get('/manualCraft/:id', async(req, res) => {
+  const id = req.params.id;
+  const query = { _id: new ObjectId(id)}
+  const result = await manualCraftCollection.findOne(query);
+  res.send(result)
 })
 
 async function run() {
