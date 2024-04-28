@@ -90,6 +90,7 @@ app.get('/manualCraft/:id', async(req, res) => {
   const query = { _id: new ObjectId(id)}
   const result = await manualCraftCollection.findOne(query);
   res.send(result)
+  console.log("view details page loaded")
 })
 
 async function run() {
