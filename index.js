@@ -48,6 +48,25 @@ app.post('/userCraft', async(req, res) =>{
   res.send(result);
 })
 
+// app.patch('/userCraft', async(req, res) => {
+//   const userCraft = req.body;
+//   const filter = { email: userCraft.email}
+//   const updatedCraft = {
+//     $set: {
+       
+//     }
+//   };
+//   const result = await userCraftCollection.updateOne(filter, updatedCraft);
+//   res.send(result);
+// })
+
+app.delete('/userCraft/:id', async(req, res) => {
+  const id = req.params.id;
+  const query = { _id: new ObjectId(id)}
+  const result = await userCraftCollection.deleteOne(query);
+  res.send(result);
+})
+
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
