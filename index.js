@@ -6,10 +6,17 @@ require('dotenv').config()
 const port = process.env.PORT || 5000;
 
 //middleware
-app.use(cors());
-app.use(express.json({
-  origin: ["http://localhost:5173/", "https://tenth-a-craftopia.web.app/"]
-}));
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173",
+      "https://tenth-a-craftopia.web.app",
+      "https://tenth-a-craftopia.firebaseapp.com"
+    ],
+    credentials: true,
+  })
+);
+app.use(express.json());
 
 const uri = `mongodb+srv://${process.env.CDB_USER}:${process.env.CDB_PASS}@cluster0.ahaugjj.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
 
@@ -22,85 +29,88 @@ const client = new MongoClient(uri, {
   }
 });
 
-// Get the database and collection on which to run the operation
-const userCraftCollection = client.db("userCraftDB").collection("userCraft");
-const manualCraftCollection = client.db("userCraftDB").collection("manualCraft");
 
-//userCraft related api
-app.get('/userCraft', async(req, res) => { 
-  const cursor = userCraftCollection.find();
-  const result = await cursor.toArray();
-  res.send(result);
-})
-
-app.get('/userCraft/:id', async(req, res) => {
-  const id = req.params.id;
-  const query = { _id: new ObjectId(id)}
-  const result = await userCraftCollection.findOne(query);
-  res.send(result)
-})
-
-app.post('/userCraft', async(req, res) =>{
-  // Create a document to insert
-  const newCraft = req.body;
-  //console.log(newCraft);
-  // Insert the defined document into the "userAddCraft" collection
-  const result = await userCraftCollection.insertOne(newCraft);
-  // send inserted data to database
-  res.send(result);
-})
-
-app.put('/userCraft/:id', async(req, res) => {
-  const id = req.params.id;
-  const filter = { _id: new ObjectId(id)}
-  const options = { upsert: true };
-  const craft = req.body;
-  const updatedCraft = {
-    $set: {
-      customization: craft.customization,
-      description: craft.description, 
-      itemName: craft.itemName,
-      photo: craft.photo,
-      prize: craft.prize,
-      processingTime: craft.processingTime,
-      rating: craft.rating,
-      stockStatus: craft.stockStatus,
-      subCategory: craft.subCategory
-    }
-  };
-  const result = await userCraftCollection.updateOne(filter, updatedCraft, options);
-  res.send(result);
-  console.log("craft updated", updatedCraft)
-})
-
-app.delete('/userCraft/:id', async(req, res) => {
-  const id = req.params.id;
-  const query = { _id: new ObjectId(id)}
-  const result = await userCraftCollection.deleteOne(query);
-  res.send(result);
-})
-
-//manualCraft related api
-app.get('/manualCraft', async(req, res) => { 
-  const cursor = manualCraftCollection.find();
-  const result = await cursor.toArray();
-  res.send(result);
-})
-
-app.get('/manualCraft/:id', async(req, res) => {
-  const id = req.params.id;
-  const query = { _id: new ObjectId(id)}
-  const result = await manualCraftCollection.findOne(query);
-  res.send(result)
-  //console.log("view details page loaded")
-})
 
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
     //await client.connect();
+
+    // Get the database and collection on which to run the operation
+    const userCraftCollection = client.db("userCraftDB").collection("userCraft");
+    const manualCraftCollection = client.db("userCraftDB").collection("manualCraft");
+
+    //userCraft related api
+    app.get('/userCraft', async(req, res) => { 
+      const cursor = userCraftCollection.find();
+      const result = await cursor.toArray();
+      res.send(result);
+    })
+
+    app.get('/userCraft/:id', async(req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id)}
+      const result = await userCraftCollection.findOne(query);
+      res.send(result)
+    })
+
+    app.post('/userCraft', async(req, res) =>{
+      // Create a document to insert
+      const newCraft = req.body;
+      //console.log(newCraft);
+      // Insert the defined document into the "userAddCraft" collection
+      const result = await userCraftCollection.insertOne(newCraft);
+      // send inserted data to database
+      res.send(result);
+    })
+
+    app.put('/userCraft/:id', async(req, res) => {
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id)}
+      const options = { upsert: true };
+      const craft = req.body;
+      const updatedCraft = {
+        $set: {
+          customization: craft.customization,
+          description: craft.description, 
+          itemName: craft.itemName,
+          photo: craft.photo,
+          prize: craft.prize,
+          processingTime: craft.processingTime,
+          rating: craft.rating,
+          stockStatus: craft.stockStatus,
+          subCategory: craft.subCategory
+        }
+      };
+      const result = await userCraftCollection.updateOne(filter, updatedCraft, options);
+      res.send(result);
+      console.log("craft updated", updatedCraft)
+    })
+
+    app.delete('/userCraft/:id', async(req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id)}
+      const result = await userCraftCollection.deleteOne(query);
+      res.send(result);
+    })
+
+    //manualCraft related api
+    app.get('/manualCraft', async(req, res) => { 
+      const cursor = manualCraftCollection.find();
+      const result = await cursor.toArray();
+      res.send(result);
+    })
+
+    app.get('/manualCraft/:id', async(req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id)}
+      const result = await manualCraftCollection.findOne(query);
+      res.send(result)
+      //console.log("view details page loaded")
+    })
+
     // Send a ping to confirm a successful connection
-    await client.db("admin").command({ ping: 1 });
+    //await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } finally {
     // Ensures that the client will close when you finish/error
