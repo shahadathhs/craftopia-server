@@ -45,10 +45,6 @@ npm install
 ```env
 DB_USER=your_mongodb_username
 DB_PASS=your_mongodb_password
-
-ACCESS_TOKEN_SECRET=your_access_token_secret
-
-STRIPE_SECRET_KEY=your_stripe_secret_key
 ```
 
 5. **Start the backend server**
